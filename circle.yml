@@ -6,4 +6,4 @@ deployment:
   production:
     branch: master
     commands:
-      - git subtree push --prefix server git@heroku.com:geochatapi.git master
+      - git push git@heroku.com:geochatapi.git `git subtree split --prefix server master`:master --force
