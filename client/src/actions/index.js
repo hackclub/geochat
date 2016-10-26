@@ -12,14 +12,13 @@ export const receiveMessage = message => ({
 })
 
 export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER'
+export const USER_JOINED = 'USER_JOINED'
+export const USER_LEFT = 'USER_LEFT'
 
 export const receiveCurrentUser = user => ({
   type: RECEIVE_CURRENT_USER,
   user
 })
-
-export const USER_JOINED = 'USER_JOINED'
-export const USER_LEFT = 'USER_LEFT'
 
 export const userJoined = user => ({
   type: USER_JOINED,

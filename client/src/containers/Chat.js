@@ -4,14 +4,18 @@ import { sendMessage } from '../actions'
 
 class Chat extends Component {
   render() {
-    const { messages, sendMessage } = this.props
+    const { users, messages, sendMessage } = this.props
 
     let input
-    let renderedMessages = messages.map((msg, index) => (
-      <div key={index}>
-        <p>{msg.body}</p>
-      </div>
-    ))
+    let renderedMessages = messages.map((msg, index) => {
+      const user = users.all[msg.userId]
+
+      return (
+        <div key={index}>
+          <p>{user.city} - {msg.body}</p>
+        </div>
+      )
+    })
 
     return (
       <div>
@@ -39,6 +43,7 @@ class Chat extends Component {
 }
 
 const mapStateToProps = state => ({
+  users: state.users,
   messages: state.messages
 })
 

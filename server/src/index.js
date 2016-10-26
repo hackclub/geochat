@@ -15,7 +15,22 @@ io.on('connection', client => {
 
   let client_ip = client.request.headers['x-forwarded-for'] || client.request.connection.remoteAddress
 
-  fetch(`https://ifcfg.me/${client_ip}/json`)
+  new Promise((resolve, reject) => {
+    for (let userId in state.users) {
+      let user = state.users[userId]
+
+      client.emit('action', {
+        type: 'USER_JOINED',
+        user: {
+          ...user,
+          id: userId
+        }
+      })
+    }
+
+    return resolve()
+  })
+    .then(() => fetch(`https://ifcfg.me/${client_ip}/json`))
     .then(res => res.json())
     .then(body => ({
       city: body.city,

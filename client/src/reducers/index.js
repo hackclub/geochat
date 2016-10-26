@@ -1,30 +1,36 @@
 import { combineReducers } from 'redux'
 import {
   RECEIVE_CURRENT_USER,
-
   USER_JOINED, USER_LEFT,
 
   SEND_MESSAGE, RECEIVE_MESSAGE
 } from '../actions'
 
-const currentUser = (state = {}, action) => {
+const users = (state = {
+  currentUserId: null,
+  all: {}
+}, action) => {
   switch(action.type) {
   case RECEIVE_CURRENT_USER:
-    return action.user
-  default:
-    return state
-  }
-}
+    let stateWithCurrentUser = { ...state }
+    const { id: currentId, ...currentUser } = action.user
 
-const users = (state = [], action) => {
-  switch(action.type) {
+    stateWithCurrentUser.currentUserId = currentId
+    stateWithCurrentUser.all[currentId] = currentUser
+
+    return stateWithCurrentUser
   case USER_JOINED:
-    return [
-      action.user,
-      ...state
-    ]
+    let stateWithNewUser = { ...state }
+    let { id: joinedId, ...joinedUser } = action.user
+
+    stateWithNewUser.all[joinedId] = joinedUser
+
+    return stateWithNewUser
   case USER_LEFT:
-    return state.filter(user => user.id !== action.userId)
+    let newState = { ...state }
+    delete newState.all[action.userId]
+
+    return newState
   default:
     return state
   }
@@ -45,7 +51,6 @@ const messages = (state = [], action) => {
 }
 
 const rootReducer = combineReducers({
-  currentUser,
   users,
   messages
 })
