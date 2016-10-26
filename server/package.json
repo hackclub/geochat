@@ -4,6 +4,7 @@
   "dependencies": {
     "babel-preset-stage-2": "^6.18.0",
     "babel-register": "^6.18.0",
+    "node-fetch": "^1.6.3",
     "socket.io": "^1.5.1"
   },
   "scripts": {

@@ -1,5 +1,6 @@
 import { createServer } from 'http'
 import IO from 'socket.io'
+import fetch from 'node-fetch'
 import config from './config'
 
 const server = createServer()
@@ -12,17 +13,37 @@ let state = {
 io.on('connection', client => {
   console.log('Client connected!')
 
-  state.users[client.id] = {
-    ip: client.request.connection.remoteAddress
-  }
+  let client_ip = client.request.headers['x-forwarded-for'] || client.request.connection.remoteAddress
 
-  client.emit('action', {
-    type: 'RECEIVE_CURRENT_USER',
-    user: {
-      ...state.users[client.id],
-      id: client.id
-    }
-  })
+  fetch(`https://ifcfg.me/${client_ip}/json`)
+    .then(res => res.json())
+    .then(body => ({
+      city: body.city,
+      country: body.country,
+      latitude: body.latitude,
+      longitude: body.longitude
+    }))
+    .then(ip_info => {
+      state.users[client.id] = {
+        ...ip_info,
+        ip: client_ip
+      }
+
+      const user = {
+        ...state.users[client.id],
+        id: client.id
+      }
+
+      client.emit('action', {
+        type: 'RECEIVE_CURRENT_USER',
+        user
+      })
+
+      client.broadcast.emit('action', {
+        type: 'USER_JOINED',
+        user
+      })
+    })
 
   client.on('action', action => {
     switch(action.type) {
