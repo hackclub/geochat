@@ -10,6 +10,8 @@ let state = {
   users: {}
 }
 
+io.set('origins', 'https://geochat.hackclub.com:443')
+
 io.on('connection', client => {
   console.log('Client connected!')
 
