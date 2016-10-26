@@ -35,10 +35,10 @@ io.on('connection', client => {
     .then(() => fetch(`https://ifcfg.me/${client_ip}/json`))
     .then(res => res.json())
     .then(body => ({
-      city: body.city,
-      country: body.country,
-      latitude: body.latitude,
-      longitude: body.longitude
+      city: body.city || 'Unknown City',
+      country: body.country || 'Unknown Country',
+      latitude: body.latitude || 0,
+      longitude: body.longitude || 0
     }))
     .then(ip_info => {
       state.users[client.id] = {
