@@ -6,4 +6,4 @@ deployment:
   production:
     branch: master
     commands:
-      - git subtree push --prefix server git@heroku.com:geochatapi.git $CIRCLE_SHA1:refs/heads/master
+      - git subtree push --prefix server git@heroku.com:geochatapi.git master
