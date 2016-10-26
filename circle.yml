@@ -1,3 +1,7 @@
+test:
+  override:
+    - echo "No tests!"
+
 deployment:
   production:
     branch: master
