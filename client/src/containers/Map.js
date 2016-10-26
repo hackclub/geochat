@@ -137,8 +137,6 @@ class Map extends Component {
       )
     })
 
-    debugger
-
     return (
       <GoogleMap
           bootstrapURLKeys={{key: apiKey}}
