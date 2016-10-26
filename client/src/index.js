@@ -8,7 +8,7 @@ import App from './containers/App'
 import reducer from './reducers'
 import './index.css'
 
-let socket = IO("http://localhost:4000")
+let socket = IO("https://geochat-api.hackclub.com/")
 let socketIoMiddleware = createSocketIoMiddleware(socket, "server/")
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
