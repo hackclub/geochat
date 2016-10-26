@@ -76,6 +76,12 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
+    delete state.users[client.id]
+
+    io.sockets.emit('action', {
+      type: 'USER_LEFT',
+      userId: client.id
+    })
     console.log('Client disconnected!')
   })
 })

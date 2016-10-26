@@ -6,6 +6,7 @@ import IO from 'socket.io-client'
 import { Provider } from 'react-redux'
 import App from './containers/App'
 import reducer from './reducers'
+import './index.css'
 
 let socket = IO("http://localhost:4000")
 let socketIoMiddleware = createSocketIoMiddleware(socket, "server/")
