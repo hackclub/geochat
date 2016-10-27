@@ -7,35 +7,23 @@ const K_WIDTH = 22
 const K_HEIGHT = 40
 
 const styles = {
-  base: {
-    position: 'absolute',
-    width: K_WIDTH,
-    height: K_HEIGHT,
-    left: -K_WIDTH / 2,
-    top: -K_HEIGHT / 2,
-  },
-  hover: {
-    width: K_WIDTH * 1.5,
-    height: K_HEIGHT * 1.5,
-    left: -K_WIDTH / 1.5,
-    top: -K_HEIGHT,
-  }
+  position: 'absolute',
+  width: K_WIDTH,
+  height: K_HEIGHT,
+  left: -K_WIDTH / 2,
+  bottom: -K_HEIGHT / 2,
 }
 
 class UserMarker extends Component {
   static propTypes = {
-    $hover: PropTypes.bool,
     user: PropTypes.object.isRequired
   }
 
   render() {
-    const { user, $hover } = this.props
+    const { user, style } = this.props
 
     return (
-      <img src={pin} style={[
-        styles.base,
-        $hover ? styles.hover : null
-      ]} />
+      <img src={pin} style={[styles,style]} />
     )
   }
 }

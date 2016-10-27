@@ -7,7 +7,8 @@ import { sendMessage } from '../actions'
 
 const styles = {
   card: {
-    paddingTop: '12.5px'
+    paddingTop: '12.5px',
+    paddingBottom: '12.5px'
   },
   messages: {
     maxHeight: '400px',
@@ -30,6 +31,11 @@ const styles = {
       border: `1px solid ${colors.outline}`
     }
   },
+  userCount: {
+    fontSize: '14px',
+    fontStyle: 'italic',
+    marginTop: '7.5px',
+  }
 }
 
 class Chat extends Component {
@@ -51,10 +57,13 @@ class Chat extends Component {
   }
 
   render() {
-    const { messages, sendMessage, style } = this.props
+    const { users, messages, sendMessage, style } = this.props
 
     let input
-    let renderedMessages = messages.map((msg, index) => {
+
+    const userCount = Object.keys(users).length
+
+    const renderedMessages = messages.map((msg, index) => {
       return (
         <div
             key={index}
@@ -84,13 +93,19 @@ class Chat extends Component {
                   input = node
                 }} />
         </form>
+        <div style={[styles.userCount]}>
+          {userCount} {userCount == 1 ?
+                       "user is" :
+                       "users are"
+                      } currently online
+        </div>
       </Card>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  users: state.users,
+  users: state.users.all,
   messages: state.messages
 })
 
