@@ -13,6 +13,9 @@ let state = {
 
 io.set('origins', 'https://geochat.hackclub.com:443')
 
+io.set('heartbeat interval', 500)
+io.set('heartbeat timeout', 1000)
+
 io.on('connection', client => {
   console.log('Client connected!')
 
@@ -42,6 +45,14 @@ io.on('connection', client => {
           messages: state.messages
         }
       })
+
+      client.broadcast.emit('action', {
+        type: 'USER_JOINED',
+        user: {
+          ...state.users[client.id],
+          id: client.id
+        }
+      })
     })
 
   client.on('action', action => {
@@ -67,7 +78,7 @@ io.on('connection', client => {
     }
   })
 
-  client.on('disconnect', () => {
+  client.once('disconnect', () => {
     delete state.users[client.id]
 
     io.sockets.emit('action', {

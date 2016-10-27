@@ -94,10 +94,10 @@ class Chat extends Component {
                 }} />
         </form>
         <div style={[styles.userCount]}>
-          {userCount} {userCount == 1 ?
+          {userCount} {userCount === 1 ?
                        "user is" :
                        "users are"
-                      } currently online
+                      } currently online {userCount === 1 ? "(that's you!)" : ""}
         </div>
       </Card>
     )
