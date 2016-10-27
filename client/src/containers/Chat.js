@@ -33,16 +33,33 @@ const styles = {
 }
 
 class Chat extends Component {
+  _scrollToLatestMessage() {
+    const { messages } = this.props
+
+    const latestMessageNode = this['_div' + (messages.length-1)]
+    if (latestMessageNode) {
+      latestMessageNode.scrollIntoView()
+    }
+  }
+
+  componentDidMount() {
+    this._scrollToLatestMessage()
+  }
+
+  componentDidUpdate() {
+    this._scrollToLatestMessage()
+  }
+
   render() {
-    const { users, messages, sendMessage, style } = this.props
+    const { messages, sendMessage, style } = this.props
 
     let input
     let renderedMessages = messages.map((msg, index) => {
-      const user = users.all[msg.userId]
-
       return (
-        <div key={index}>
-          <p>{user.city} – {msg.body}</p>
+        <div
+            key={index}
+            ref={ref => this['_div' + index] = ref}>
+          <p>{msg.city} – {msg.body}</p>
         </div>
       )
     })

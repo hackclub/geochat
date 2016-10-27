@@ -7,7 +7,8 @@ const server = createServer()
 const io = IO(server)
 
 let state = {
-  users: {}
+  users: {},
+  messages: []
 }
 
 io.set('origins', 'https://geochat.hackclub.com:443')
@@ -15,24 +16,9 @@ io.set('origins', 'https://geochat.hackclub.com:443')
 io.on('connection', client => {
   console.log('Client connected!')
 
-  let client_ip = client.request.headers['x-forwarded-for'] || client.request.connection.remoteAddress
+  const client_ip = client.request.headers['x-forwarded-for'] || client.request.connection.remoteAddress
 
-  new Promise((resolve, reject) => {
-    for (let userId in state.users) {
-      let user = state.users[userId]
-
-      client.emit('action', {
-        type: 'USER_JOINED',
-        user: {
-          ...user,
-          id: userId
-        }
-      })
-    }
-
-    return resolve()
-  })
-    .then(() => fetch(`https://ifcfg.me/${client_ip}/json`))
+  fetch(`https://ifcfg.me/${client_ip}/json`)
     .then(res => res.json())
     .then(body => ({
       city: body.city || 'Unknown City',
@@ -46,31 +32,35 @@ io.on('connection', client => {
         ip: client_ip
       }
 
-      const user = {
-        ...state.users[client.id],
-        id: client.id
-      }
-
       client.emit('action', {
-        type: 'RECEIVE_CURRENT_USER',
-        user
-      })
-
-      client.broadcast.emit('action', {
-        type: 'USER_JOINED',
-        user
+        type: 'INITIAL_STATE',
+        state: {
+          users: {
+            currentUserId: client.id,
+            all: state.users
+          },
+          messages: state.messages
+        }
       })
     })
 
   client.on('action', action => {
     switch(action.type) {
     case 'server/SEND_MESSAGE':
-      let msg = action.message
+      const msg = action.message
+      const userCity = state.users[client.id].city
+
+      state.messages.push({
+        userId: client.id,
+        city: userCity,
+        body: msg
+      })
 
       io.sockets.emit('action', {
         type: 'RECEIVE_MESSAGE',
         message: {
           userId: client.id,
+          city: userCity,
           body: msg
         }
       })
