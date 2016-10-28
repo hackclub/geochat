@@ -14,7 +14,7 @@ let state = {
 io.set('origins', 'https://geochat.hackclub.com:443')
 
 io.set('heartbeat interval', 500)
-io.set('heartbeat timeout', 1000)
+io.set('heartbeat timeout', 5000)
 
 io.on('connection', client => {
   console.log('Client connected!')
