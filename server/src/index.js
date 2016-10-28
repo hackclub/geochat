@@ -20,6 +20,7 @@ io.on('connection', client => {
   console.log('Client connected!')
 
   const client_ip = client.request.headers['x-forwarded-for'] || client.request.connection.remoteAddress
+  let stateSync
 
   fetch(`https://ifcfg.me/${client_ip}/json`)
     .then(res => res.json())
@@ -35,16 +36,23 @@ io.on('connection', client => {
         ip: client_ip
       }
 
-      client.emit('action', {
-        type: 'INITIAL_STATE',
-        state: {
-          users: {
-            currentUserId: client.id,
-            all: state.users
-          },
-          messages: state.messages
-        }
-      })
+      let sendInitialState = function() {
+        client.emit('action', {
+          type: 'INITIAL_STATE',
+          state: {
+            users: {
+              currentUserId: client.id,
+              all: state.users
+            },
+            messages: state.messages
+          }
+        })
+      }
+
+      sendInitialState()
+      stateSync = setInterval(() => {
+        sendInitialState()
+      }, 1000)
 
       client.broadcast.emit('action', {
         type: 'USER_JOINED',
@@ -79,6 +87,9 @@ io.on('connection', client => {
   })
 
   client.once('disconnect', () => {
+    if (stateSync) {
+      clearInterval(stateSync)
+    }
     delete state.users[client.id]
 
     io.sockets.emit('action', {
