@@ -24,7 +24,7 @@ class App extends Component {
       <div>
         <Chat style={styles.chat} />
         <Map
-            apiKey={'AIzaSyCb0SKkQRH8dHxK8qu7c-w0DUGgf7CPZqY'}
+            apiKey={'REPLACEME'}
             style={styles.map} />
       </div>
     )
